@@ -15,12 +15,12 @@ class Log:
     def save_frame(self):
         self.log.append(np.array([self.compress(creature) for creature in self.simulation.creatures], dtype = np.float16))
 
-    def save_log(self, filename = "simulation_logs.obj"):
+    def save_log(self, filename = "logs.obj"):
         file = open(filename, 'wb')
         pickle.dump((self.log, self.simulation.cost, self.simulation.food_spawn_probability, self.keys), file)
         file.close()
 
-    def read_log(self, filename = "simulation_logs.obj"):
+    def read_log(self, filename = "logs.obj"):
         with open(filename, "rb") as file:
             return pickle.load(file)
 
