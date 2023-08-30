@@ -29,9 +29,6 @@ class Creature:
 
             # how far can grab food
             "grab range": random.uniform(0, 10),
-
-            # how much food can bring
-            "capacity": 3
         }
 
         
@@ -66,8 +63,7 @@ class Creature:
         descendant.genes = {
             "velocity": max(self.genes["velocity"] + random.uniform(-5, 5), 0),
             "vision": self.genes["vision"] + random.uniform(-5, 5),
-            "grab range": self.genes["grab range"] + random.uniform(-2, 2),
-            "capacity": self.genes["capacity"] + random.uniform(-0.1, 0.1)
+            "grab range": self.genes["grab range"] + random.uniform(-2, 2)
         }
         simulation.creatures.append(descendant)
         

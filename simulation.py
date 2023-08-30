@@ -13,7 +13,7 @@ class Simulation:
 
         # constants
         self.starting_food = 100
-        self.starting_creatures = 4
+        self.starting_creatures = 1
         self.food_spawn_probability = 0.08
         self.simulation_start_time = time.time()
 
@@ -43,14 +43,14 @@ class Simulation:
 
 
     def cost(self, genes, dt):
-        return (10 * genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100) * dt * 2e-5
+        return(6*genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100)*dt*2e-5
 
     def move_frame(self, dt):
         for creature in self.creatures[:]:
             creature.move(self, dt)
             for food in self.foods[:]:
                 if distance(food, creature.position) < creature.genes["grab range"]:
-                    creature.hunger = min(creature.hunger + 1, creature.genes["capacity"])
+                    creature.hunger = creature.hunger + 1
                     self.foods.remove(food)
                     
             creature.hunger -= self.cost(creature.genes, dt)

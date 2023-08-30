@@ -54,12 +54,10 @@ class Displayer:
     def display_frame(self, simulation):
             self.screen.fill((255, 255, 255))
             for creature in simulation.creatures:
-                pg.draw.circle(
-                    self.screen, 
-                    self.creature_color, 
-                    creature.get_position(), 
-                    self.creature_radius
-                    )
+                circle = pg.Surface((self.creature_radius * 2, self.creature_radius * 2), pg.SRCALPHA)
+                pg.draw.circle(circle, (0, 0, 255, 128), (self.creature_radius, self.creature_radius), self.creature_radius)
+                self.screen.blit(circle, (creature.get_position()[0] - self.creature_radius, creature.get_position()[1] - self.creature_radius))
+
             for food in simulation.foods:
                 pg.draw.circle(
                     self.screen, 
