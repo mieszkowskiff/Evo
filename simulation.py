@@ -3,7 +3,8 @@ import random
 import pygame as pg
 import time
 from display import Displayer
-
+import numpy as np
+from logs import Log
 
 
 
@@ -13,7 +14,7 @@ class Simulation:
 
         # constants
         self.starting_food = 100
-        self.starting_creatures = 1
+        self.starting_creatures = 4
         self.food_spawn_probability = 0.08
         self.simulation_start_time = time.time()
 
@@ -23,19 +24,20 @@ class Simulation:
 
     def run(self):
         displayer = Displayer(self)
+        log = Log(self)
         dt = 0.001
         while not displayer.quit(self):
 
             start_time = time.time()
             self.move_frame(dt)
             displayer.display_frame(self)
-
-
+            log.save_frame()
 
 
 
 
             dt = time.time() - start_time
+        log.save_log()
     
             
 
@@ -43,7 +45,7 @@ class Simulation:
 
 
     def cost(self, genes, dt):
-        return(6*genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100)*dt*2e-5
+        return(6*genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + 100)*dt*2e-5
 
     def move_frame(self, dt):
         for creature in self.creatures[:]:
@@ -60,9 +62,8 @@ class Simulation:
                 
 
 
-
         if random.uniform(0, 1) < self.food_spawn_probability:
-            self.foods.append((random.uniform(0, 1000), random.uniform(0, 1000)))
+            self.foods.append((np.random.normal(500, 166), np.random.normal(500, 166)))
 
 
 

@@ -1,5 +1,6 @@
 import random
 import math
+import numpy as np
 
 
 def distance(p1, p2):
@@ -61,9 +62,9 @@ class Creature:
         descendant = Creature()
         descendant.position = self.position
         descendant.genes = {
-            "velocity": max(self.genes["velocity"] + random.uniform(-5, 5), 0),
-            "vision": self.genes["vision"] + random.uniform(-5, 5),
-            "grab range": self.genes["grab range"] + random.uniform(-2, 2)
+            "velocity":  np.random.normal(self.genes["velocity"], 3),
+            "vision": np.random.normal(self.genes["vision"], 3),
+            "grab range": np.random.normal(self.genes["grab range"], 3)
         }
         simulation.creatures.append(descendant)
         
