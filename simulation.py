@@ -2,6 +2,7 @@ from creature import Creature, distance
 import random
 import pygame as pg
 import time
+from display import Displayer
 
 
 
@@ -20,45 +21,29 @@ class Simulation:
         self.foods = [(random.uniform(0, 1000), random.uniform(0, 1000)) for i in range(self.starting_food)]
         self.creatures = [Creature() for i in range(self.starting_creatures)]
 
-        # display
-        pg.init()
-        self.screen = pg.display.set_mode([1000, 1000])
-        running = True
-        start_time = time.time()
-        while running:
+    def run(self):
+        displayer = Displayer()
+        dt = 0.001
+        while not displayer.quit():
 
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    running = False
-
-            self.screen.fill((255, 255, 255))
-            dt = time.time() - start_time
-            self.move_frame(dt)
-            self.draw_frame()
             start_time = time.time()
-            pg.display.flip()
-            if time.time() - self.simulation_start_time > 100:
-                self.food_spawn_probability = 0
-        pg.quit()
+            self.move_frame(dt)
+            displayer.display_frame(self)
 
-    def draw_frame(self):
-        for creature in self.creatures:
-            pg.draw.circle(
-                self.screen, 
-                (0, 0, 255), 
-                creature.get_position(), 
-                10
-                )
-        for food in self.foods:
-            pg.draw.circle(
-                self.screen, 
-                (255, 0, 0), 
-                food, 
-                5
-                )
+
+
+
+
+
+            dt = time.time() - start_time
+    
+            
+
+        
+
 
     def cost(self, genes, dt):
-        return (genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100) * dt * 1e-6
+        return (1/10 * genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100) * dt * 1e-6
 
     def move_frame(self, dt):
         for creature in self.creatures[:]:
@@ -82,4 +67,5 @@ class Simulation:
 
 
 if __name__ == "__main__":
-    Simulation()
+    simulation1 = Simulation()
+    simulation1.run()
