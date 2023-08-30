@@ -4,7 +4,7 @@ import math
 def distance(p1, p2):
     return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
-def blit_text(surface, text, pos, font, color=pygame.Color('black')):
+def blit_text(surface, text, pos, font, color=pg.Color('black')):
     words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
     space = font.size(' ')[0]  # The width of a space.
     max_width, max_height = surface.get_size()
@@ -24,10 +24,11 @@ def blit_text(surface, text, pos, font, color=pygame.Color('black')):
 
 
 class Displayer:
-    def __init__(self):
+    def __init__(self, simulation):
         pg.init()
+        self.creature_to_display = simulation.creatures[0]
         pg.display.set_caption('Simulation')
-        self.font = pg.font.SysFont('Arial', 32)
+        self.font = pg.font.SysFont('Calibri', 20)
 
         self.creature_radius = 10
         self.creature_color = (0, 0, 255) # blue
@@ -40,7 +41,7 @@ class Displayer:
 
         self.screen = pg.display.set_mode([1000, 1000])
 
-        self.texts = []
+        
     
     def quit(self, simulation):
         for event in pg.event.get():
@@ -66,17 +67,29 @@ class Displayer:
                     food, 
                     self.food_radius
                     )
-            for text in self.texts:
-                self.screen.blit(text, text.get_rect())
+            blit_text(
+                self.screen, 
+                f"""hunger: {self.creature_to_display.hunger}
+velocity: {self.creature_to_display.genes["velocity"]}
+vision: {self.creature_to_display.genes["vision"]}
+grab range: {self.creature_to_display.genes["grab range"]}""",
+    
+
+                (0, 0), 
+                self.font
+                )
             pg.display.flip()
+            
         
 
     def click(self, simulation):
         mouse_pos = pg.mouse.get_pos()
         for creature in simulation.creatures:
-            if distance(creature.get_position(), mouse_pos) < self.creature_radius:
-                text = "d\nb"
-                self.texts.append(self.font.render(text, True, self.text_color, self.text_background))
+            if distance(creature.get_position(), mouse_pos) < self.creature_radius * 2:
+                self.creature_to_display = creature
+                
+
+                
 
 
     

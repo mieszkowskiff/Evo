@@ -28,7 +28,7 @@ class Creature:
             "vision": random.uniform(0, 100),
 
             # how far can grab food
-            "grab range": random.uniform(0, 5),
+            "grab range": random.uniform(0, 10),
 
             # how much food can bring
             "capacity": 3
@@ -46,7 +46,10 @@ class Creature:
                 min_distance = distance(self.position, food)
                 nearest_food_position = food
         if min_distance < self.genes["vision"]:
-            self.direction = math.atan2((nearest_food_position[1] - self.position[1]),(nearest_food_position[0] - self.position[0]))
+            self.direction = math.atan2(
+                (nearest_food_position[1] - self.position[1]),
+                (nearest_food_position[0] - self.position[0])
+                )
         else:
             self.direction += random.uniform(-math.pi, math.pi) / 40
         self.position = (
@@ -61,9 +64,9 @@ class Creature:
         descendant = Creature()
         descendant.position = self.position
         descendant.genes = {
-            "velocity": self.genes["velocity"] + random.uniform(-0.1, 0.1),
-            "vision": self.genes["vision"] + random.uniform(-0.1, 0.1),
-            "grab range": self.genes["grab range"] + random.uniform(-0.05, 0.05),
+            "velocity": max(self.genes["velocity"] + random.uniform(-5, 5), 0),
+            "vision": self.genes["vision"] + random.uniform(-5, 5),
+            "grab range": self.genes["grab range"] + random.uniform(-2, 2),
             "capacity": self.genes["capacity"] + random.uniform(-0.1, 0.1)
         }
         simulation.creatures.append(descendant)

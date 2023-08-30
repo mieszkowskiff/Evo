@@ -12,9 +12,9 @@ class Simulation:
     def __init__(self):
 
         # constants
-        self.starting_food = 10
+        self.starting_food = 100
         self.starting_creatures = 4
-        self.food_spawn_probability = 0.01
+        self.food_spawn_probability = 0.08
         self.simulation_start_time = time.time()
 
         # objects
@@ -22,7 +22,7 @@ class Simulation:
         self.creatures = [Creature() for i in range(self.starting_creatures)]
 
     def run(self):
-        displayer = Displayer()
+        displayer = Displayer(self)
         dt = 0.001
         while not displayer.quit(self):
 
@@ -43,7 +43,7 @@ class Simulation:
 
 
     def cost(self, genes, dt):
-        return (10 * genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100) * dt * 1e-6
+        return (10 * genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100) * dt * 2e-5
 
     def move_frame(self, dt):
         for creature in self.creatures[:]:
