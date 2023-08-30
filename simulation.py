@@ -24,7 +24,7 @@ class Simulation:
     def run(self):
         displayer = Displayer()
         dt = 0.001
-        while not displayer.quit():
+        while not displayer.quit(self):
 
             start_time = time.time()
             self.move_frame(dt)
@@ -43,7 +43,7 @@ class Simulation:
 
 
     def cost(self, genes, dt):
-        return (1/10 * genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100) * dt * 1e-6
+        return (10 * genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100) * dt * 1e-6
 
     def move_frame(self, dt):
         for creature in self.creatures[:]:
