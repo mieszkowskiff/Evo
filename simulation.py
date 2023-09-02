@@ -43,7 +43,7 @@ class Simulation:
 
 
     def cost(self, genes, dt):
-        return(6*genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + genes["capacity"] + 100)*dt*2e-5
+        return(6*genes["velocity"]**2 + genes["vision"]**2 + genes["grab range"]**2 + 100)*dt*2e-5
 
     def move_frame(self, dt):
         for creature in self.creatures[:]:
