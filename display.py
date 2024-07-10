@@ -1,8 +1,7 @@
 import pygame as pg
 import math
 
-def distance(p1, p2):
-    return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+
 
 def blit_text(surface, text, pos, font, color=pg.Color('black')):
     words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
@@ -39,8 +38,13 @@ class Displayer:
         self.text_background = (125, 125, 125) #gray
         self.text_color = (0, 0, 0) # black
 
-        self.screen = pg.display.set_mode([1000, 1000])
+        self.window_size = 500
+        self.screen = pg.display.set_mode([self.window_size, self.window_size])
 
+        self.display_ratio = self.window_size / simulation.field_size
+
+    def distance(self, p1, p2, p1_multiplier = 1):
+        return math.sqrt((p1[0] * p1_multiplier - p2[0])**2 + (p1[1] * p1_multiplier - p2[1])**2)
         
     
     def quit(self, simulation):
@@ -56,23 +60,29 @@ class Displayer:
             for creature in simulation.creatures:
                 circle = pg.Surface((self.creature_radius * 2, self.creature_radius * 2), pg.SRCALPHA)
                 pg.draw.circle(circle, (0, 0, 255, 128), (self.creature_radius, self.creature_radius), self.creature_radius)
-                self.screen.blit(circle, (creature.get_position()[0] - self.creature_radius, creature.get_position()[1] - self.creature_radius))
+                self.screen.blit(
+                    circle, 
+                    (
+                        (creature.get_position()[0] - self.creature_radius)*self.display_ratio, 
+                        (creature.get_position()[1] - self.creature_radius) * self.display_ratio
+                    )
+                    )
 
             for food in simulation.foods:
                 pg.draw.circle(
                     self.screen, 
                     self.food_color, 
-                    food, 
+                    (
+                        food[0] * self.display_ratio,
+                        food[1] * self.display_ratio
+                     ), 
                     self.food_radius
                     )
             blit_text(
-                self.screen, 
-                f"""hunger: {self.creature_to_display.hunger}
-velocity: {self.creature_to_display.genes["velocity"]}
-vision: {self.creature_to_display.genes["vision"]}
-grab range: {self.creature_to_display.genes["grab range"]}""",
-    
-
+                self.screen,
+                f"hunger: {self.creature_to_display.hunger:.5}\n" + "\n".join(
+                    f"{key}: {float(value):.5}" for key, value in self.creature_to_display.genes.items()
+                    ),
                 (0, 0), 
                 self.font
                 )
@@ -83,12 +93,8 @@ grab range: {self.creature_to_display.genes["grab range"]}""",
     def click(self, simulation):
         mouse_pos = pg.mouse.get_pos()
         for creature in simulation.creatures:
-            if distance(creature.get_position(), mouse_pos) < self.creature_radius * 2:
+            if self.distance(creature.get_position(), mouse_pos, p1_multiplier=self.display_ratio) < self.creature_radius * 2:
                 self.creature_to_display = creature
-                
-
-                
-
 
     
     def finish(self):
