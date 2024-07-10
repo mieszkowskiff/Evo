@@ -30,6 +30,9 @@ class Creature:
 
             # how far can grab food
             "grab range": random.uniform(0, 10),
+
+            # how much food is required to reproduce
+            "reproduction level": random.uniform(1.5, 2.5)
         }
 
         
@@ -54,9 +57,11 @@ class Creature:
             self.position[0] + math.cos(self.direction) * self.genes["velocity"] * dt, 
             self.position[1] + math.sin(self.direction) * self.genes["velocity"] * dt
         )
-        if self.hunger > 2.2:
-            self.reproduce(simulation)
-            self.hunger -= 1.2
+        if self.hunger > self.genes["reproduction level"]:
+            if self.hunger > simulation.reproduction_cost:
+                self.reproduce(simulation)
+            self.hunger -= simulation.reproduction_cost
+            
     
     def reproduce(self, simulation):
         descendant = Creature()
@@ -64,7 +69,8 @@ class Creature:
         descendant.genes = {
             "velocity":  np.random.normal(self.genes["velocity"], 3),
             "vision": np.random.normal(self.genes["vision"], 3),
-            "grab range": np.random.normal(self.genes["grab range"], 3)
+            "grab range": np.random.normal(self.genes["grab range"], 3),
+            "reproduction level": np.random.normal(self.genes["reproduction level"], 0.2)
         }
         simulation.creatures.append(descendant)
         
